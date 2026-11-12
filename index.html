@@ -1,1 +1,1241 @@
 
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-block:env(safe-area-inset-top,0px) env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Barber English</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700;800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{
+  /* Layout: one phone-first column. Barber-pole band on top, signage-style condensed headings, plain white cards.
+     Red = the action to take. Blue = progress and pronunciation. Green/dark red only for right/wrong answers. */
+  --bg:#F1F4F7; --surface:#FFFFFF; --ink:#111C29; --muted:#566475; --line:#D6DDE5;
+  --red:#C62F2A; --on-red:#FFFFFF;
+  --blue:#1B4E9B; --blue-soft:#E4EDFA;
+  --good:#1D7448; --good-soft:#E1F2E8;
+  --bad:#AE2A22; --bad-soft:#FBE7E4;
+  --display:'Barlow Condensed','Arial Narrow',Arial,sans-serif;
+  --body:'Barlow',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E141B; --surface:#161E28; --ink:#E9EEF4; --muted:#9AA7B6; --line:#2A3543;
+    --red:#FF7A6B; --on-red:#1A0B0A;
+    --blue:#82AEF2; --blue-soft:#1A2A44;
+    --good:#5CCB93; --good-soft:#15301F;
+    --bad:#FF8D82; --bad-soft:#3B1F1D;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E141B; --surface:#161E28; --ink:#E9EEF4; --muted:#9AA7B6; --line:#2A3543;
+  --red:#FF7A6B; --on-red:#1A0B0A;
+  --blue:#82AEF2; --blue-soft:#1A2A44;
+  --good:#5CCB93; --good-soft:#15301F;
+  --bad:#FF8D82; --bad-soft:#3B1F1D;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:400 17px/1.5 var(--body);
+  padding-block:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.wrap{max-width:640px;margin:0 auto;padding-block:20px 56px;display:flex;flex-direction:column;gap:20px}
+.pole{height:12px;background:repeating-linear-gradient(-45deg,var(--red) 0 10px,var(--surface) 10px 20px,var(--blue) 20px 30px,var(--surface) 30px 40px);border:1px solid var(--line)}
+.label{margin:0;font:600 12px/1.2 var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{margin:0;font-family:var(--display);text-wrap:balance}
+h1{font-size:clamp(52px,15vw,76px);line-height:.92;font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+h2{font-size:30px;line-height:1.05;font-weight:700}
+h3{font-size:24px;line-height:1.1;font-weight:700}
+p{margin:0}
+.lead{color:var(--muted);max-width:46ch}
+.hero{display:flex;flex-direction:column;gap:10px}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.stat strong{font:700 34px/1 var(--display);font-variant-numeric:tabular-nums}
+.stat strong small{font-size:20px;color:var(--muted);font-weight:600}
+.bar{display:block;height:5px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--blue);border-radius:3px}
+
+.daily{display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px 12px;text-align:left;width:100%;background:var(--red);color:var(--on-red);border:0;border-radius:6px;padding:18px 18px}
+.daily .label{color:inherit;opacity:.85}
+.daily strong{font:700 30px/1.05 var(--display)}
+.daily span.sub{grid-column:1;font-size:15px;opacity:.9}
+.daily .ic{grid-column:2;grid-row:1 / span 3;display:flex}
+
+.section{display:flex;flex-direction:column;gap:10px}
+.list{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px 12px;text-align:left;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;min-height:64px}
+.row:hover{border-color:var(--blue)}
+.row-main{display:flex;flex-direction:column;min-width:0}
+.row-title{font:700 24px/1.1 var(--display)}
+.row-sub{font-size:14px;color:var(--muted)}
+.row-end{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
+.row .bar{grid-column:1 / -1}
+.soon{display:flex;flex-wrap:wrap;gap:8px}
+.soon span{border:1px dashed var(--line);border-radius:999px;padding:6px 12px;font-size:14px;color:var(--muted)}
+
+.topbar{display:flex;flex-direction:column;gap:10px}
+.back{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:8px 8px 8px 0;color:var(--blue);font-weight:600;min-height:44px}
+.sub{color:var(--muted);font-size:15px}
+
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;padding:12px 8px;min-height:48px;font-weight:600;letter-spacing:.03em}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--blue);color:var(--on-red)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .seg button[aria-pressed="true"]{color:#0E141B}}
+:root[data-theme="dark"] .seg button[aria-pressed="true"]{color:#0E141B}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:16px}
+.flash-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.en{font:700 clamp(32px,9vw,44px)/1.05 var(--display);text-wrap:balance}
+.pt{font-size:20px;font-weight:500}
+.say{font:500 16px/1.5 var(--mono);color:var(--blue);overflow-wrap:anywhere}
+.reveal{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:16px}
+.tip{font-size:14px;color:var(--muted)}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:600;padding:3px 8px;border-radius:999px}
+.tag.good{background:var(--good-soft);color:var(--good)}
+.audio{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.nav{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 18px;border-radius:6px;border:1px solid var(--line);background:var(--surface);font-weight:600;letter-spacing:.04em;text-transform:uppercase;font-size:14px}
+.btn.primary{background:var(--red);border-color:var(--red);color:var(--on-red)}
+.btn.ghost{background:none}
+.btn.wide{width:100%}
+.btn:disabled{opacity:.45;cursor:default}
+.audio-btn{background:var(--blue-soft);border-color:var(--blue-soft);color:var(--blue)}
+.chip{min-height:44px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:14px;font-weight:600}
+.chip[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-soft);color:var(--blue)}
+
+.opts{display:flex;flex-direction:column;gap:8px}
+.optrow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:stretch}
+.opt{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;width:100%;min-height:54px;padding:12px 14px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.opt:hover:not(:disabled){border-color:var(--blue)}
+.opt:disabled{color:var(--ink)}
+.opt.right{background:var(--good-soft);border-color:var(--good)}
+.opt.right svg{color:var(--good)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.opt.wrong svg{color:var(--bad)}
+.opt.dim{opacity:.55}
+.sq{min-width:54px;padding:0 12px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--blue);display:inline-flex;align-items:center;justify-content:center}
+.feedback{border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.feedback.ok{background:var(--good-soft)}
+.feedback.no{background:var(--bad-soft)}
+.feedback strong{font:700 22px/1.1 var(--display)}
+.progress-line{display:flex;align-items:center;gap:12px}
+.progress-line .bar{flex:1}
+
+.chat{display:flex;flex-direction:column;gap:10px}
+.bubble{max-width:88%;padding:12px 14px;border-radius:6px;border:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;gap:6px}
+.bubble.me{align-self:flex-end;background:var(--blue-soft);border-color:var(--blue-soft)}
+.bubble .who{font:600 12px/1 var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.bubble.me .who{color:var(--blue)}
+.bubble .line{font:600 22px/1.2 var(--display);letter-spacing:.005em}
+.bubble .tr{font-size:15px;color:var(--muted)}
+.situation{font-size:15px;color:var(--muted);border-left:3px solid var(--red);padding-left:12px}
+.score{font:800 64px/1 var(--display);font-variant-numeric:tabular-nums}
+.miss{display:flex;flex-direction:column;gap:8px;padding:0;margin:0;list-style:none}
+.miss li{border-top:1px solid var(--line);padding-top:8px}
+.miss b{font-family:var(--display);font-size:20px}
+.empty{align-items:flex-start}
+.wrap.flush{padding-block:0}
+.icw{display:inline-flex}
+svg{flex:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- Conteúdo (para adicionar módulos novos, copie um bloco e mude o texto) ---------- */
+/* Cada card: [inglês, português, pronúncia aproximada]. Sílaba tônica em MAIÚSCULAS. */
+var MODULES=[
+{id:'survival',title:'Sobrevivência',en:'When you don’t understand',blurb:'Frases para pedir ajuda e falar mais devagar. Comece por aqui.',cards:[
+ ["Sorry, I don't understand.","Desculpe, não entendi.","SÓ-ri, ai DÔNT an-der-STÉND"],
+ ["Can you repeat, please?","Pode repetir, por favor?","kén iú ri-PÍT, plíz"],
+ ["Can you speak slowly, please?","Pode falar devagar, por favor?","kén iú spík SLÔU-li, plíz"],
+ ["I'm learning English.","Estou aprendendo inglês.","áim LÉR-nin ÍN-glish"],
+ ["Can you show me?","Pode me mostrar?","kén iú SHÔU mí"],
+ ["What does this mean?","O que isso significa?","UÓT dáz dís MÍN"],
+ ["One moment, please.","Um momento, por favor.","uán MÔU-ment, plíz"],
+ ["Thank you very much!","Muito obrigado!","THÉNK iú VÉ-ri MÁTCH"]
+]},
+{id:'words',title:'Palavras da barbearia',en:'Barbershop words',kind:'word',blurb:'Ferramentas, partes do cabelo e termos de corte.',cards:[
+ ["clippers","máquina de cortar cabelo","KLÍ-pers"],
+ ["scissors","tesoura","SÍ-zers"],
+ ["razor","navalha","RÊI-zer"],
+ ["comb","pente","KÔUM"],
+ ["cape","capa de corte","KÊIP"],
+ ["mirror","espelho","MÍ-rer"],
+ ["hair dryer","secador de cabelo","HÉR DRÁI-er"],
+ ["hair","cabelo","HÉR"],
+ ["neck","pescoço / nuca","NÉK"],
+ ["sideburns","costeletas","SÁID-bérns"],
+ ["fringe","franja","FRÍNDJ"],
+ ["parting","risca do cabelo","PÁR-tin"],
+ ["back and sides","parte de trás e laterais","BÉK énd SÁIDS"],
+ ["top","parte de cima","TÓP"],
+ ["length","comprimento","LÊNKTH"],
+ ["trim","aparar","TRÍM"],
+ ["fade","degradê","FÊID"],
+ ["beard","barba","BÍRD"],
+ ["moustache","bigode","mâs-TÉSH"],
+ ["wax","cera","UÉKS"],
+ ["pomade","pomada","pô-MÊID"],
+ ["shampoo","xampu","shém-PÚ"],
+ ["aftershave","loção pós-barba","ÁF-ter-shêiv"]
+]},
+{id:'welcome',title:'Recepção',en:'Welcome the customer',blurb:'Do momento em que o cliente entra até sentar na cadeira.',cards:[
+ ["Hello! Welcome.","Olá! Bem-vindo.","he-LÔU. UÉL-kâm"],
+ ["What's your name?","Qual é o seu nome?","UÓTS iór NÊIM"],
+ ["Nice to meet you.","Prazer em conhecer.","NÁIS tu MÍT iú"],
+ ["Do you have an appointment?","Você tem hora marcada?","du iú HÉV an a-PÓINT-ment"],
+ ["Take a seat, please.","Sente-se, por favor.","TÊIK a SÍT, plíz"],
+ ["Wait a few minutes, please.","Espere alguns minutos, por favor.","UÊIT a FIÚ MI-nits, plíz"],
+ ["Who is next?","Quem é o próximo?","HÚ iz NÉKST"],
+ ["I'm ready for you.","Estou pronto para você.","áim RÉ-di for iú"],
+ ["Can I take your jacket?","Posso pegar seu casaco?","kén ai TÊIK iór DJÁ-kit"],
+ ["Would you like a drink? Water, tea or coffee?","Aceita uma bebida? Água, chá ou café?","uúd iú LÁIK a DRÍNK? UÓ-ter, TÍ or KÓ-fi"]
+]},
+{id:'cut',title:'Corte de cabelo',en:'The haircut',blurb:'Perguntar o estilo, confirmar o corte e mostrar o resultado.',cards:[
+ ["How would you like your hair cut?","Como você quer o corte?","HAU uúd iú LÁIK iór HÉR KÁT"],
+ ["What would you like today?","O que vai ser hoje?","UÓT uúd iú LÁIK tu-DÊI"],
+ ["A skin fade or a low fade?","Degradê na pele ou degradê baixo?","a SKÍN fêid or a LÔU fêid"],
+ ["Short on the sides, longer on top?","Curto nas laterais, mais comprido em cima?","SHÓRT on dê SÁIDS, LÓN-ger on TÓP"],
+ ["Which number for the clippers?","Qual número na máquina?","UÍTCH NÁM-ber for dê KLÍ-pers"],
+ ["Number two on the sides.","Número dois nas laterais.","NÁM-ber TÚ on dê SÁIDS"],
+ ["Do you want me to take a lot off?","Quer que eu tire bastante?","du iú UÓNT mí tu têik a LÓT óf"],
+ ["Not too short, please.","Não muito curto, por favor.","NÓT tú SHÓRT, plíz"],
+ ["Do you want a wash?","Quer lavar o cabelo?","du iú UÓNT a UÓSH"],
+ ["Is the water too hot?","A água está muito quente?","iz dê UÓ-ter TÚ HÓT"],
+ ["Let me show you the back.","Deixe-me mostrar a parte de trás.","LÉT mí SHÔU iú dê BÉK"],
+ ["Do you like it?","Gostou?","du iú LÁIK it"],
+ ["Do you want me to style it?","Quer que eu penteie e modele?","du iú UÓNT mí tu STÁIL it"]
+]},
+{id:'beard',title:'Barba',en:'Beard and shave',blurb:'Aparar, fazer o contorno e cuidar do conforto do cliente.',cards:[
+ ["Would you like a beard trim?","Quer aparar a barba?","uúd iú LÁIK a BÍRD TRÍM"],
+ ["Shorter or longer?","Mais curta ou mais longa?","SHÓR-ter or LÓN-ger"],
+ ["Just a little off, please.","Só um pouquinho, por favor.","DJÁST a LI-tl ÓF, plíz"],
+ ["Do you want a clean shave?","Quer o rosto bem liso?","du iú UÓNT a KLÍN SHÊIV"],
+ ["Shall I do a line-up?","Quer que eu faça o contorno?","SHÉL ai DU a LÁIN-áp"],
+ ["Do you want to keep the moustache?","Quer manter o bigode?","du iú UÓNT tu KÍP dê mâs-TÉSH"],
+ ["I'll use a hot towel.","Vou usar uma toalha quente.","áil IÚZ a HÓT TÁU-el"],
+ ["Is the towel too hot?","A toalha está quente demais?","iz dê TÁU-el TÚ HÓT"],
+ ["Tell me if it hurts.","Me avise se doer.","TÉL mí if it HÉRTS"]
+]},
+{id:'products',title:'Produtos e vendas',en:'Selling products',blurb:'Recomendar um produto, explicar e fechar a venda sem pressão.',cards:[
+ ["Do you use any product in your hair?","Você usa algum produto no cabelo?","du iú IÚZ É-ni PRÓ-dákt in iór HÉR"],
+ ["I recommend this wax.","Eu recomendo esta cera.","ai ré-ko-MÉND dís UÉKS"],
+ ["It gives a strong hold and a matte finish.","Dá fixação forte e acabamento fosco.","it GÍVS a STRÓN HÔULD énd a MÉT FÍ-nish"],
+ ["This one is lighter, with a natural look.","Esse é mais leve, com visual natural.","dís UÁN iz LÁI-ter, uíth a NÉ-tchu-ral LÚK"],
+ ["It's good for thick hair.","É bom para cabelo grosso.","íts GÚD for THÍK HÉR"],
+ ["It's good for thin hair.","É bom para cabelo fino.","íts GÚD for THÍN HÉR"],
+ ["Just use a small amount.","Use só uma pequena quantidade.","DJÁST iúz a SMÓL a-MÁUNT"],
+ ["Rub it in your hands first.","Esfregue nas mãos primeiro.","RÁB it in iór HÉNDS FÉRST"],
+ ["Would you like to try it?","Quer experimentar?","uúd iú LÁIK tu TRÁI it"],
+ ["I use it myself.","Eu mesmo uso.","ai IÚZ it mai-SÉLF"],
+ ["This beard oil keeps your beard soft.","Este óleo de barba deixa a barba macia.","dís BÍRD ÓIL KÍPS iór BÍRD SÓFT"],
+ ["It lasts about two months.","Dura cerca de dois meses.","it LÉSTS a-BÁUT TÚ MÁNTHS"],
+ ["It's fifteen euro.","Custa quinze euros.","íts FIF-TÍN IÚ-rou"],
+ ["Would you like to take it home today?","Quer levar para casa hoje?","uúd iú LÁIK tu têik it HÔUM tu-DÊI"]
+]},
+{id:'payment',title:'Pagamento e despedida',en:'Paying and goodbye',blurb:'Cobrar, dar o recibo, marcar o próximo corte e se despedir.',cards:[
+ ["That's twenty euro, please.","São vinte euros, por favor.","DÉTS TUÉN-ti IÚ-rou, plíz"],
+ ["Cash or card?","Dinheiro ou cartão?","KÉSH or KÁRD"],
+ ["You can tap here.","Pode aproximar aqui.","iú kén TÉP HÍR"],
+ ["Enter your PIN, please.","Digite sua senha, por favor.","ÉN-ter iór PÍN, plíz"],
+ ["Do you want a receipt?","Quer o recibo?","du iú UÓNT a ri-SÍT"],
+ ["Here is your change.","Aqui está o seu troco.","HÍR iz iór TCHÊINDJ"],
+ ["Would you like to book your next appointment?","Quer marcar o próximo horário?","uúd iú LÁIK tu BÚK iór NÉKST a-PÓINT-ment"],
+ ["Thank you! See you next time.","Obrigado! Até a próxima.","THÉNK iú! SÍ iú NÉKST TÁIM"],
+ ["Have a great day!","Tenha um ótimo dia!","HÉV a GRÊIT DÊI"]
+]},
+{id:'talk',title:'Conversa com o cliente',en:'Small talk',blurb:'Conversa leve durante o corte. Perguntas curtas e fáceis.',cards:[
+ ["How are you today?","Como você está hoje?","HAU ár iú tu-DÊI"],
+ ["Busy day?","Dia cheio?","BÍ-zi DÊI"],
+ ["Are you comfortable?","Está confortável?","ár iú KÁM-fer-tâ-bl"],
+ ["Are you working today?","Está trabalhando hoje?","ár iú UÓR-kin tu-DÊI"],
+ ["Are you going out tonight?","Vai sair hoje à noite?","ár iú GÔU-in ÁUT tu-NÁIT"],
+ ["Where are you from?","De onde você é?","UÉR ár iú FRÓM"],
+ ["I'm from Brazil.","Sou do Brasil.","áim from bra-ZÍL"]
+]},
+{id:'me',group:'conversa',title:'Falar sobre você',en:'Talking about yourself',blurb:'Respostas prontas para as perguntas que todo mundo faz.',cards:[
+ ["I'm from Brazil, but I live in Ireland now.","Sou do Brasil, mas moro na Irlanda agora.","áim from bra-ZÍL, bát ai LÍV in ÁI-er-lând NÁU"],
+ ["I moved here recently.","Me mudei para cá recentemente.","ai MÚVD HÍR RÍ-sent-li"],
+ ["I'm looking for a job as a barber.","Estou procurando emprego de barbeiro.","áim LÚ-kin for a DJÓB éz a BÁR-ber"],
+ ["I like cutting hair.","Gosto de cortar cabelo.","ai LÁIK KÁ-tin HÉR"],
+ ["My English is not perfect, but I'm learning.","Meu inglês não é perfeito, mas estou aprendendo.","mai ÍN-glish iz NÓT PÉR-fikt, bát áim LÉR-nin"],
+ ["I study English every day.","Estudo inglês todos os dias.","ai STÁ-di ÍN-glish É-vri DÊI"],
+ ["I want to improve my English.","Quero melhorar meu inglês.","ai UÓNT tu im-PRÚV mai ÍN-glish"],
+ ["In my free time, I like to listen to music.","No meu tempo livre, gosto de ouvir música.","in mai FRÍ TÁIM, ai LÁIK tu LÍ-sen tu MIÚ-zik"],
+ ["It's nice to be here.","É bom estar aqui.","íts NÁIS tu BÍ HÍR"],
+ ["People are very friendly here.","As pessoas são muito simpáticas aqui.","PÍ-pl ár VÉ-ri FRÉND-li HÍR"]
+]},
+{id:'react',group:'conversa',title:'Reagir e manter a conversa',en:'Sounding natural',blurb:'Pequenas frases que fazem a conversa andar. Use muito.',cards:[
+ ["Really? That's cool!","Sério? Que legal!","RÍ-li? DÉTS KÚL"],
+ ["I see.","Entendi.","ai SÍ"],
+ ["Me too.","Eu também.","MÍ TÚ"],
+ ["That sounds good.","Parece bom.","dét SÁUNDS GÚD"],
+ ["Sounds tough.","Parece difícil.","SÁUNDS TÁF"],
+ ["No problem.","Sem problema.","nôu PRÓ-blem"],
+ ["Of course!","Claro!","óv KÓRS"],
+ ["Let me think.","Deixa eu pensar.","LÉT mí THÍNK"],
+ ["How about you?","E você?","HAU a-BÁUT iú"],
+ ["What do you mean?","O que você quer dizer?","UÓT du iú MÍN"],
+ ["How do you say this in English?","Como se diz isso em inglês?","HAU du iú SÊI dís in ÍN-glish"],
+ ["I don't know the word.","Não sei a palavra.","ai DÔNT NÔU dê UÉRD"],
+ ["Tell me more.","Me conte mais.","TÉL mí MÓR"],
+ ["You should visit!","Você deveria visitar!","iú SHÚD VÍ-zit"],
+ ["Good luck!","Boa sorte!","GÚD LÁK"]
+]},
+{id:'topics',group:'conversa',title:'Assuntos do dia a dia',en:'Everyday topics',blurb:'Tempo, fim de semana, comida, futebol e a vida na Irlanda.',cards:[
+ ["It's raining again.","Está chovendo de novo.","íts RÊI-nin a-GÉN"],
+ ["It's cold today.","Está frio hoje.","íts KÔULD tu-DÊI"],
+ ["It's a nice day today.","Está um dia bonito hoje.","íts a NÁIS DÊI tu-DÊI"],
+ ["Do you have any plans for the weekend?","Tem planos para o fim de semana?","du iú HÉV É-ni PLÉNS for dê UÍK-énd"],
+ ["I'm going to relax at home.","Vou descansar em casa.","áim GÔU-in tu ri-LÉKS ét HÔUM"],
+ ["I'm working this weekend.","Vou trabalhar neste fim de semana.","áim UÓR-kin dís UÍK-énd"],
+ ["What did you do yesterday?","O que você fez ontem?","UÓT díd iú DU YÉS-ter-dêi"],
+ ["I watched a football match.","Assisti a uma partida de futebol.","ai UÓTCHT a FÚT-bôl MÉTCH"],
+ ["Do you like football?","Você gosta de futebol?","du iú LÁIK FÚT-bôl"],
+ ["What kind of music do you like?","Que tipo de música você gosta?","UÓT KÁIND óv MIÚ-zik du iú LÁIK"],
+ ["What did you have for lunch?","O que você almoçou?","UÓT díd iú HÉV for LÁNTCH"],
+ ["I'm hungry. I need to eat.","Estou com fome. Preciso comer.","áim HÁN-gri. ai NÍD tu ÍT"],
+ ["How long have you lived here?","Há quanto tempo você mora aqui?","HAU LÓN hév iú LÍVD HÍR"],
+ ["I like Ireland. It's beautiful.","Gosto da Irlanda. É bonita.","ai LÁIK ÁI-er-lând. íts BIÚ-ti-ful"],
+ ["Have a good weekend!","Bom fim de semana!","HÉV a GÚD UÍK-énd"]
+]},
+{id:'numbers',group:'conversa',kind:'word',title:'Números, horas e dias',en:'Numbers, time and days',blurb:'Preços, dias da semana e horas. Aparecem em quase toda conversa.',cards:[
+ ["fifteen","quinze","fif-TÍN"],
+ ["twenty","vinte","TUÉN-ti"],
+ ["twenty-five","vinte e cinco","TUÉN-ti-FÁIV"],
+ ["thirty","trinta","THÉR-ti"],
+ ["forty","quarenta","FÓR-ti"],
+ ["fifty","cinquenta","FÍF-ti"],
+ ["one hundred","cem","uán HÁN-drid"],
+ ["euro","euro (moeda)","IÚ-rou"],
+ ["cent","centavo","SÉNT"],
+ ["Monday","segunda-feira","MÁN-dêi"],
+ ["Tuesday","terça-feira","TIÚZ-dêi"],
+ ["Wednesday","quarta-feira","UÉNZ-dêi"],
+ ["Thursday","quinta-feira","THÉRZ-dêi"],
+ ["Friday","sexta-feira","FRÁI-dêi"],
+ ["Saturday","sábado","SÉ-ter-dêi"],
+ ["Sunday","domingo","SÁN-dêi"],
+ ["today","hoje","tu-DÊI"],
+ ["tomorrow","amanhã","tu-MÓ-rôu"],
+ ["yesterday","ontem","YÉS-ter-dêi"],
+ ["o'clock","em ponto","a-KLÓK"],
+ ["half past","e meia","HÁF PÉST"],
+ ["a quarter past","e quinze","a KUÓR-ter PÉST"],
+ ["a quarter to","quinze para","a KUÓR-ter TÚ"]
+]},
+{id:'interview',group:'trabalho',title:'Entrevista de emprego',en:'Job interview',blurb:'Perguntas comuns em entrevistas de barbearia e respostas simples.',cards:[
+ ["Nice to meet you. Thank you for seeing me.","Prazer. Obrigado por me receber.","NÁIS tu MÍT iú. THÉNK iú for SÍ-in mí"],
+ ["I'm here for the barber job.","Estou aqui para a vaga de barbeiro.","áim HÍR for dê BÁR-ber DJÓB"],
+ ["Can you tell me about yourself?","Pode falar um pouco sobre você?","kén iú TÉL mí a-BÁUT iór-SÉLF"],
+ ["I can do fades and beard trims.","Sei fazer degradê e aparar barba.","ai kén DU FÊIDS énd BÍRD TRÍMS"],
+ ["I'm always on time.","Eu sempre chego no horário.","áim ÓL-uêiz on TÁIM"],
+ ["I work hard.","Eu trabalho duro.","ai UÓRK HÁRD"],
+ ["I'm a fast learner.","Aprendo rápido.","áim a FÁST LÉR-ner"],
+ ["When can you start?","Quando você pode começar?","UÉN kén iú START"],
+ ["I can start next week.","Posso começar na próxima semana.","ai kén START NÉKST UÍK"],
+ ["What days can you work?","Quais dias você pode trabalhar?","UÓT DÊIZ kén iú UÓRK"],
+ ["I can work weekends.","Posso trabalhar nos fins de semana.","ai kén UÓRK UÍK-éndz"],
+ ["Do you have permission to work in Ireland?","Você tem permissão para trabalhar na Irlanda?","du iú HÉV per-MÍ-shan tu UÓRK in ÁI-er-lând"],
+ ["How many hours per week?","Quantas horas por semana?","HAU MÉ-ni ÁU-erz per UÍK"],
+ ["What is the pay per hour?","Qual é o pagamento por hora?","UÓT iz dê PÊI per ÁU-er"],
+ ["Do you have any questions?","Você tem alguma pergunta?","du iú HÉV É-ni KUÉS-tchans"],
+ ["Thank you for your time.","Obrigado pelo seu tempo.","THÉNK iú for iór TÁIM"]
+]},
+{id:'firstday',group:'trabalho',title:'Primeiro dia e rotina',en:'Your first days at work',blurb:'Horários, pedir ajuda, avisar atraso e trocar de turno.',cards:[
+ ["What time do I start?","A que horas eu começo?","UÓT TÁIM du ai START"],
+ ["What time do I finish?","A que horas eu termino?","UÓT TÁIM du ai FÍ-nish"],
+ ["Where can I put my things?","Onde posso deixar minhas coisas?","UÉR kén ai PÚT mai THÍNGS"],
+ ["Can you show me how to do this?","Pode me mostrar como fazer isso?","kén iú SHÔU mí HAU tu DU dís"],
+ ["Is this OK?","Está bom assim?","iz DÍS ôu-KÊI"],
+ ["Who do I ask for help?","A quem eu peço ajuda?","HÚ du ai ÉSK for HÉLP"],
+ ["I'll clean the station.","Vou limpar o meu posto de trabalho.","áil KLÍN dê STÊI-shan"],
+ ["I'm sorry I'm late.","Desculpe o atraso.","áim SÓ-ri áim LÊIT"],
+ ["I'm running late.","Estou atrasado.","áim RÁ-nin LÊIT"],
+ ["Can I take a break?","Posso fazer uma pausa?","kén ai TÊIK a BRÊIK"],
+ ["Can I swap shifts with you?","Posso trocar de turno com você?","kén ai SUÓP SHÍFTS uíth iú"],
+ ["Can I leave early today?","Posso sair mais cedo hoje?","kén ai LÍV ÉR-li tu-DÊI"],
+ ["Thanks for your help!","Obrigado pela ajuda!","THÉNKS for iór HÉLP"],
+ ["See you tomorrow!","Até amanhã!","SÍ iú tu-MÓ-rôu"]
+]},
+{id:'transport',group:'vida',title:'Transporte e direções',en:'Getting around',blurb:'Ônibus, passagem, pedir direção e não se perder.',cards:[
+ ["Where is the bus stop?","Onde fica o ponto de ônibus?","UÉR iz dê BÁS STÓP"],
+ ["Does this bus go to the city centre?","Este ônibus vai para o centro?","DÁZ dís BÁS GÔU tu dê SÍ-ti SÉN-ter"],
+ ["What time is the next bus?","Que horas é o próximo ônibus?","UÓT TÁIM iz dê NÉKST BÁS"],
+ ["How much is a ticket?","Quanto custa a passagem?","HAU MÁTCH iz a TÍ-kit"],
+ ["One ticket to the city centre, please.","Uma passagem para o centro, por favor.","UÁN TÍ-kit tu dê SÍ-ti SÉN-ter, plíz"],
+ ["I have a Leap card.","Tenho um cartão Leap.","ai HÉV a LÍP KÁRD"],
+ ["Is this seat free?","Este lugar está livre?","iz dís SÍT FRÍ"],
+ ["Can you tell me when to get off?","Pode me avisar quando descer?","kén iú TÉL mí UÉN tu GÉT ÓF"],
+ ["Excuse me, how do I get to the station?","Com licença, como chego à estação?","iks-KIÚS mí, HAU du ai GÉT tu dê STÊI-shan"],
+ ["Go straight.","Siga em frente.","GÔU STRÊIT"],
+ ["Turn left.","Vire à esquerda.","TÉRN LÉFT"],
+ ["Turn right.","Vire à direita.","TÉRN RÁIT"],
+ ["It's on your left.","Fica à sua esquerda.","íts ON iór LÉFT"],
+ ["It's about five minutes on foot.","Fica a uns cinco minutos a pé.","íts a-BÁUT FÁIV MI-nits on FÚT"],
+ ["I'm lost.","Estou perdido.","áim LÓST"]
+]},
+{id:'shop',group:'vida',title:'Supermercado e compras',en:'Shopping',blurb:'Achar produtos, perguntar preço e pagar.',cards:[
+ ["Excuse me, where is the bread?","Com licença, onde fica o pão?","iks-KIÚS mí, UÉR iz dê BRÉD"],
+ ["Where can I find milk?","Onde encontro leite?","UÉR kén ai FÁIND MÍLK"],
+ ["Where is the checkout?","Onde fica o caixa?","UÉR iz dê TCHÉK-áut"],
+ ["How much is this?","Quanto custa isto?","HAU MÁTCH iz DÍS"],
+ ["I'm just looking, thanks.","Só estou olhando, obrigado.","áim DJÁST LÚ-kin, THÉNKS"],
+ ["Can I try this on?","Posso experimentar isto?","kén ai TRÁI dís ÓN"],
+ ["Do you have this in black?","Tem isso em preto?","du iú HÉV dís in BLÉK"],
+ ["Do you have this in a bigger size?","Tem isso em tamanho maior?","du iú HÉV dís in a BÍ-ger SÁIZ"],
+ ["Is there a discount?","Tem desconto?","iz dér a DÍS-kaunt"],
+ ["I'll take it.","Vou levar.","áil TÊIK it"],
+ ["Can I have a bag, please?","Posso ter uma sacola, por favor?","kén ai HÉV a BÉG, plíz"],
+ ["Can I pay by card?","Posso pagar com cartão?","kén ai PÊI bai KÁRD"],
+ ["Can I get a receipt?","Pode me dar o recibo?","kén ai GÉT a ri-SÍT"]
+]},
+{id:'cafe',group:'vida',title:'Café e restaurante',en:'Eating out',blurb:'Pedir, escolher o prato e pedir a conta.',cards:[
+ ["Can I have a coffee, please?","Pode me ver um café, por favor?","kén ai HÉV a KÓ-fi, plíz"],
+ ["Eat in or take away?","Comer aqui ou levar?","ÍT ÍN or TÊIK a-UÊI"],
+ ["A table for two, please.","Uma mesa para dois, por favor.","a TÊI-bl for TÚ, plíz"],
+ ["Can I see the menu?","Posso ver o cardápio?","kén ai SÍ dê MÉ-niu"],
+ ["What do you recommend?","O que você recomenda?","UÓT du iú ré-ko-MÉND"],
+ ["I'd like the chicken, please.","Quero o frango, por favor.","áid LÁIK dê TCHÍ-kin, plíz"],
+ ["Does it have meat?","Tem carne?","DÁZ it HÉV MÍT"],
+ ["Without onions, please.","Sem cebola, por favor.","uíth-ÁUT Á-nians, plíz"],
+ ["Tap water, please.","Água da torneira, por favor.","TÉP UÓ-ter, plíz"],
+ ["Can I have the bill, please?","Pode trazer a conta, por favor?","kén ai HÉV dê BÍL, plíz"],
+ ["Is service included?","O serviço está incluído?","iz SÉR-vis in-KLÚ-did"],
+ ["It was delicious, thank you!","Estava delicioso, obrigado!","it uóz di-LÍ-shas, THÉNK iú"]
+]},
+{id:'housing',group:'vida',title:'Procurar moradia',en:'Finding a place to live',blurb:'Perguntar sobre aluguel, contas, depósito e visitar o quarto.',cards:[
+ ["Is the room still available?","O quarto ainda está disponível?","iz dê RÚM stíl a-VÊI-la-bl"],
+ ["How much is the rent?","Quanto é o aluguel?","HAU MÁTCH iz dê RÉNT"],
+ ["Are the bills included?","As contas estão incluídas?","ár dê BÍLZ in-KLÚ-did"],
+ ["How much is the deposit?","Quanto é o depósito?","HAU MÁTCH iz dê di-PÓ-zit"],
+ ["Can I see the room?","Posso ver o quarto?","kén ai SÍ dê RÚM"],
+ ["Can I come to see it tomorrow?","Posso ir vê-lo amanhã?","kén ai KÁM tu SÍ it tu-MÓ-rôu"],
+ ["Who else lives here?","Quem mais mora aqui?","HÚ ÉLS LÍVZ HÍR"],
+ ["Is it near the bus stop?","Fica perto do ponto de ônibus?","iz it NÍR dê BÁS STÓP"],
+ ["Is there Wi-Fi?","Tem Wi-Fi?","iz dér UÁI-fai"],
+ ["Can I use the kitchen?","Posso usar a cozinha?","kén ai IÚZ dê KÍ-tchen"],
+ ["How long is the contract?","Quanto tempo dura o contrato?","HAU LÓN iz dê KÓN-trékt"],
+ ["When can I move in?","Quando posso me mudar?","UÉN kén ai MÚV ÍN"],
+ ["I'd like to take the room.","Quero ficar com o quarto.","áid LÁIK tu TÊIK dê RÚM"]
+]},
+{id:'health',group:'vida',title:'Farmácia e saúde',en:'Pharmacy and health',blurb:'Dizer o que você sente e pedir ajuda. Para emergência, veja a última frase.',cards:[
+ ["Excuse me, is there a pharmacy near here?","Com licença, tem uma farmácia por perto?","iks-KIÚS mí, iz dér a FÁR-ma-si NÍR HÍR"],
+ ["I have a headache.","Estou com dor de cabeça.","ai HÉV a HÉD-êik"],
+ ["I have a sore throat.","Estou com dor de garganta.","ai HÉV a SÓR THRÔUT"],
+ ["Do you have something for a cough?","Tem algo para tosse?","du iú HÉV SÁM-thin for a KÓF"],
+ ["How often can I take this?","Com que frequência posso tomar isto?","HAU Ó-fen kén ai TÊIK dís"],
+ ["Is it safe with other medicine?","É seguro com outros remédios?","iz it SÊIF uíth Á-dher MÉ-di-sin"],
+ ["It hurts here.","Dói aqui.","it HÉRTS HÍR"],
+ ["I need to see a doctor.","Preciso ir ao médico.","ai NÍD tu SÍ a DÓK-ter"],
+ ["Can I book an appointment?","Posso marcar uma consulta?","kén ai BÚK an a-PÓINT-ment"],
+ ["I need help, please.","Preciso de ajuda, por favor.","ai NÍD HÉLP, plíz"],
+ ["In an emergency, call 112 or 999.","Em emergência, ligue 112 ou 999.","in an i-MÉR-djen-si, KÓL UÁN-UÁN-TÚ or NÁIN-NÁIN-NÁIN"]
+]}
+];
+var SOON=['Banco e documentos','Ligações e mensagens','Academia e esportes'];
+var TRACKS=[
+ {id:'barbearia',title:'Barbearia',blurb:'Atendimento, corte, barba e venda de produtos.'},
+ {id:'conversa',title:'Conversa do dia a dia',blurb:'Falar sobre você, reagir e manter o papo, números e horas.'},
+ {id:'trabalho',title:'Trabalho e entrevista',blurb:'Conseguir a vaga e se virar nos primeiros dias.'},
+ {id:'vida',title:'Vida na Irlanda',blurb:'Transporte, compras, café, moradia e farmácia.'}
+];
+
+/* Simulações: o cliente fala, você escolhe a melhor resposta do barbeiro. */
+var SCENES=[
+{id:'cut',title:'Um corte do começo ao fim',blurb:'Cliente chega, senta, escolhe o corte e vê o resultado.',steps:[
+ {sit:'Um cliente entra e diz que tem hora marcada.',c:"Hi! I have an appointment at ten.",cp:"Oi! Tenho hora marcada às dez.",o:[
+  {t:"Hello! What's your name?",ok:1,w:"Boa. Cumprimente e pergunte o nome para achar a reserva."},
+  {t:"Cash or card?",w:"Ainda é cedo para falar de pagamento."},
+  {t:"Have a great day!",w:"Essa frase é para a despedida."}]},
+ {sit:'Ele diz o nome. Convide para sentar.',c:"It's Tom.",cp:"É o Tom.",o:[
+  {t:"Nice to meet you, Tom. Take a seat, please.",ok:1,w:"Perfeito: educado e direto."},
+  {t:"That's twenty euro, please.",w:"Ele nem sentou ainda."},
+  {t:"I recommend this wax.",w:"A venda vem depois do corte."}]},
+ {sit:'Tom está na cadeira. Pergunte como ele quer o corte.',c:"Thanks. I need a haircut.",cp:"Obrigado. Preciso cortar o cabelo.",o:[
+  {t:"How would you like your hair cut?",ok:1,w:"Essa é a pergunta principal do atendimento."},
+  {t:"Is the water too hot?",w:"Essa pergunta é para a lavagem."},
+  {t:"Do you want a receipt?",w:"O recibo é só no pagamento."}]},
+ {sit:'Ele explica o que quer. Confirme o número da máquina.',c:"Short on the sides, longer on top. Not too short, please.",cp:"Curto nas laterais, mais comprido em cima. Não muito curto, por favor.",o:[
+  {t:"Number two on the sides, OK?",ok:1,w:"Você confirma o número da máquina antes de cortar."},
+  {t:"Cash or card?",w:"Ainda não é hora de cobrar."},
+  {t:"Would you like to try it?",w:"Essa pergunta é para produtos."}]},
+ {sit:'Você terminou o corte. Ele quer ver a parte de trás.',c:"Can I see the back?",cp:"Posso ver a parte de trás?",o:[
+  {t:"Sure. Let me show you the back.",ok:1,w:"Certo. Você pega o espelho e mostra."},
+  {t:"Take a seat, please.",w:"Ele já está sentado."},
+  {t:"Wait a few minutes, please.",w:"Ele pediu para ver agora."}]},
+ {sit:'Ele gostou do resultado. Ofereça modelar o cabelo.',c:"Yes, it looks great, thanks!",cp:"Sim, ficou ótimo, obrigado!",o:[
+  {t:"Great! Do you want me to style it?",ok:1,w:"Boa. É o passo natural antes de falar de produto."},
+  {t:"Sorry, I don't understand.",w:"Ele foi claro: ele gostou."},
+  {t:"Who is next?",w:"Você ainda está atendendo o Tom."}]}
+]},
+{id:'beard',title:'Barba com toalha quente',en:'',blurb:'O cliente pede a barba e você conduz o atendimento.',steps:[
+ {sit:'O cliente pede ajuda com a barba.',c:"Can you do my beard too?",cp:"Pode fazer minha barba também?",o:[
+  {t:"Sure. Would you like a beard trim?",ok:1,w:"Boa. Você confirma o serviço."},
+  {t:"Do you want a wash?",w:"Ele falou de barba, não de lavar."},
+  {t:"Here is your change.",w:"Não é hora de troco."}]},
+ {sit:'Ele quer aparar. Pergunte o tamanho.',c:"Yes, a trim, please.",cp:"Sim, aparar, por favor.",o:[
+  {t:"Shorter or longer?",ok:1,w:"Pergunta curta e útil."},
+  {t:"Thank you! See you next time.",w:"Ainda não terminou."},
+  {t:"Can you repeat, please?",w:"Ele foi claro. Não precisa pedir repetição."}]},
+ {sit:'Ele quer só um pouco menos. Avise que vai usar toalha quente.',c:"Just a little off, please.",cp:"Só um pouquinho, por favor.",o:[
+  {t:"No problem. I'll use a hot towel.",ok:1,w:"Você avisa o cliente do que vai fazer."},
+  {t:"Cash or card?",w:"Ainda não é hora de cobrar."},
+  {t:"Who is next?",w:"Você ainda está nesse cliente."}]},
+ {sit:'A toalha está no rosto dele. Pergunte se está quente demais.',c:"Mmm, that's warm.",cp:"Hmm, está quente.",o:[
+  {t:"Is the towel too hot?",ok:1,w:"Cuidar do conforto faz o cliente voltar."},
+  {t:"Do you want a receipt?",w:"O recibo é no pagamento."},
+  {t:"What's your name?",w:"Você já sabe o nome dele."}]},
+ {sit:'Terminou. Ele pergunta o preço.',c:"It looks sharp. How much is it?",cp:"Ficou ótimo. Quanto custa?",o:[
+  {t:"That's twenty euro, please.",ok:1,w:"Resposta direta com o preço."},
+  {t:"Take a seat, please.",w:"Ele já está sentado."},
+  {t:"Would you like to try it?",w:"Ele perguntou o preço."}]}
+]},
+{id:'sale',title:'Vendendo uma cera',blurb:'O cliente pergunta como modelar. Recomende e feche a venda.',steps:[
+ {sit:'Você terminou o corte. O cliente gostou e quer saber como você modela.',c:"I like this hair. What do you use to style it?",cp:"Gostei do cabelo. O que você usa para modelar?",o:[
+  {t:"I recommend this wax. It gives a strong hold.",ok:1,w:"Ótimo: produto e benefício em duas frases curtas."},
+  {t:"Cash or card?",w:"Ele ainda não decidiu comprar."},
+  {t:"Have a great day!",w:"Essa frase é para a despedida."}]},
+ {sit:'Ele tem cabelo grosso.',c:"Is it good for thick hair?",cp:"É bom para cabelo grosso?",o:[
+  {t:"Yes, it's good for thick hair.",ok:1,w:"Resposta direta e positiva."},
+  {t:"No. Goodbye.",w:"Isso encerra a venda."},
+  {t:"Wait a few minutes, please.",w:"Ele fez uma pergunta sobre o produto."}]},
+ {sit:'Ele quer saber o preço.',c:"How much is it?",cp:"Quanto custa?",o:[
+  {t:"It's fifteen euro.",ok:1,w:"Direto ao ponto."},
+  {t:"It lasts about two months.",w:"É verdade, mas ele perguntou o preço."},
+  {t:"Take a seat, please.",w:"Ele já está sentado."}]},
+ {sit:'Ele quer saber como usar.',c:"OK. How do I use it?",cp:"Certo. Como eu uso?",o:[
+  {t:"Just use a small amount. Rub it in your hands first.",ok:1,w:"Duas instruções claras e simples."},
+  {t:"Do you like it?",w:"Ele perguntou como usar."},
+  {t:"Who is next?",w:"Você ainda está nesse cliente."}]},
+ {sit:'Ele decidiu levar.',c:"Great. I'll take it.",cp:"Ótimo. Eu levo.",o:[
+  {t:"Great! Cash or card?",ok:1,w:"Agora sim: hora de cobrar."},
+  {t:"Welcome!",w:"Ele já está aqui há um tempo."},
+  {t:"Which number for the clippers?",w:"O corte já acabou."}]}
+]},
+{id:'chat1',group:'conversa',title:'Papo com um cliente novo',blurb:'Conversa leve durante o corte: de onde você é e como está a vida aqui.',steps:[
+ {sit:'O cliente senta e puxa conversa.',c:"How's it going?",cp:"Como vai?",o:[
+  {t:"I'm good, thanks. How about you?",ok:1,w:"Responda e devolva a pergunta. É isso que faz a conversa andar."},
+  {t:"Yes.",w:"\"Yes\" não responde a essa pergunta."},
+  {t:"Cash or card?",w:"Hora errada para cobrar."}]},
+ {sit:'Ele percebe seu sotaque.',c:"Are you from around here?",cp:"Você é daqui?",o:[
+  {t:"No, I'm from Brazil. I live here now.",ok:1,w:"Resposta clara e completa, em duas frases curtas."},
+  {t:"Take a seat, please.",w:"Ele já está sentado."},
+  {t:"I use it myself.",w:"Essa frase é sobre produto."}]},
+ {sit:'Ele quer saber há quanto tempo você está na Irlanda.',c:"Oh, nice! How long have you been here?",cp:"Que legal! Há quanto tempo você está aqui?",o:[
+  {t:"I moved here recently.",ok:1,w:"Responde exatamente o que ele perguntou."},
+  {t:"I'm learning English.",w:"É verdade, mas ele perguntou há quanto tempo você está aqui."},
+  {t:"It's fifteen euro.",w:"Ele não perguntou preço."}]},
+ {sit:'Ele pergunta o que você acha do país.',c:"How do you like Ireland?",cp:"Está gostando da Irlanda?",o:[
+  {t:"I like it. People are very friendly here.",ok:1,w:"Opinião e motivo. Isso soa natural."},
+  {t:"Not too short, please.",w:"Essa frase é do cliente, sobre o corte."},
+  {t:"Would you like a receipt?",w:"Essa pergunta é do pagamento."}]},
+ {sit:'Ele elogia seu inglês.',c:"Your English is good!",cp:"Seu inglês é bom!",o:[
+  {t:"Thank you! I'm learning every day.",ok:1,w:"Agradeça e fale do seu esforço."},
+  {t:"Sorry, I don't understand.",w:"Ele fez um elogio. Você entendeu, então agradeça."},
+  {t:"Who is next?",w:"Você ainda está atendendo esse cliente."}]},
+ {sit:'O corte terminou e ele se despede.',c:"Keep practising. See you next time!",cp:"Continue praticando. Até a próxima!",o:[
+  {t:"Thank you! See you next time.",ok:1,w:"Despedida simples e educada."},
+  {t:"Take a seat, please.",w:"Ele está indo embora."},
+  {t:"What's your name?",w:"Você já sabe o nome dele."}]}
+]},
+{id:'chat2',group:'conversa',title:'Pausa com um colega',blurb:'Fim de semana, futebol, tempo e almoço. Reaja e devolva a pergunta.',steps:[
+ {sit:'Um colega de trabalho chega na pausa.',c:"Hey! How was your day?",cp:"Oi! Como foi seu dia?",o:[
+  {t:"Busy, but good. How about you?",ok:1,w:"Responda curto e devolva a pergunta."},
+  {t:"Number two on the sides.",w:"Essa frase é de corte de cabelo."},
+  {t:"Here is your change.",w:"Essa frase é do pagamento."}]},
+ {sit:'Ele puxa assunto sobre o fim de semana.',c:"Do you have any plans for the weekend?",cp:"Tem planos para o fim de semana?",o:[
+  {t:"I'm going to relax at home. How about you?",ok:1,w:"Você responde e pergunta de volta."},
+  {t:"I'm ready for you.",w:"Essa frase é para chamar um cliente."},
+  {t:"It's good for thick hair.",w:"Essa frase é sobre produto."}]},
+ {sit:'Ele conta o plano dele.',c:"I'm going to watch a football match.",cp:"Vou assistir a uma partida de futebol.",o:[
+  {t:"Really? That's cool!",ok:1,w:"Reação natural que mostra interesse."},
+  {t:"Not too short, please.",w:"Essa frase é do cliente, sobre o corte."},
+  {t:"Sorry, I don't understand.",w:"Você entendeu a frase. Reaja!"}]},
+ {sit:'Ele quer saber se você também gosta.',c:"Do you like football?",cp:"Você gosta de futebol?",o:[
+  {t:"Yes, I do. And you?",ok:1,w:"Responde e devolve a pergunta."},
+  {t:"I'm hungry. I need to eat.",w:"Não responde à pergunta."},
+  {t:"Have a great day!",w:"Essa frase é de despedida."}]},
+ {sit:'Vocês olham para a rua.',c:"The weather is terrible, isn't it?",cp:"O tempo está terrível, né?",o:[
+  {t:"Yes, it's raining again.",ok:1,w:"Concorda e acrescenta uma informação."},
+  {t:"It lasts about two months.",w:"Isso é sobre produto."},
+  {t:"Enter your PIN, please.",w:"Essa frase é do pagamento."}]},
+ {sit:'Está na hora do almoço.',c:"Let's get lunch. What do you want to eat?",cp:"Vamos almoçar. O que você quer comer?",o:[
+  {t:"Good idea! I'm hungry.",ok:1,w:"Aceita a ideia e dá o motivo."},
+  {t:"Have a great day!",w:"Essa frase é de despedida."},
+  {t:"Wait a few minutes, please.",w:"Essa frase é para clientes e soa seca com um colega."}]}
+]},
+{id:'chat3',group:'conversa',title:'Falando do Brasil',blurb:'O cliente tem curiosidade sobre o seu país. Responda com calma.',steps:[
+ {sit:'Ao saber que você é brasileiro, ele se anima.',c:"Brazil! I've always wanted to go there.",cp:"Brasil! Sempre quis ir lá.",o:[
+  {t:"Really? You should visit!",ok:1,w:"Reação simpática e um convite."},
+  {t:"Number two on the sides.",w:"Essa frase é de corte de cabelo."},
+  {t:"Do you want a wash?",w:"Essa pergunta é do corte."}]},
+ {sit:'Ele quer saber da comida.',c:"What's the food like in Brazil?",cp:"Como é a comida no Brasil?",o:[
+  {t:"It's very good. I like rice and beans.",ok:1,w:"Resposta e um exemplo. Fácil de entender."},
+  {t:"It's cold today.",w:"Não responde à pergunta."},
+  {t:"Enter your PIN, please.",w:"Essa frase é do pagamento."}]},
+ {sit:'Ele pergunta do clima.',c:"Is it very hot there?",cp:"Lá é muito quente?",o:[
+  {t:"Yes, it's hot. Not like Ireland!",ok:1,w:"Responde e faz uma comparação."},
+  {t:"Take a seat, please.",w:"Ele já está sentado."},
+  {t:"Would you like a beard trim?",w:"Essa pergunta é sobre barba."}]},
+ {sit:'Ele pergunta algo mais pessoal.',c:"Do you miss home?",cp:"Sente falta de casa?",o:[
+  {t:"A little, but I like it here.",ok:1,w:"Resposta sincera e equilibrada."},
+  {t:"Cash or card?",w:"Hora errada para cobrar."},
+  {t:"Who is next?",w:"Você ainda está atendendo esse cliente."}]},
+ {sit:'Ele termina a conversa com uma boa mensagem.',c:"Well, good luck with everything!",cp:"Bem, boa sorte com tudo!",o:[
+  {t:"Thank you very much!",ok:1,w:"Agradecimento simples."},
+  {t:"Sorry, I don't understand.",w:"Ele desejou boa sorte. Agradeça."},
+  {t:"Tell me if it hurts.",w:"Essa frase é do atendimento de barba."}]}
+]},
+{id:'job1',group:'trabalho',title:'Entrevista na barbearia',blurb:'O gerente faz as perguntas. Responda de forma simples e confiante.',steps:[
+ {sit:'O gerente recebe você na entrada.',c:"Hi, you must be here for the interview.",cp:"Oi, você deve ser o candidato da entrevista.",o:[
+  {t:"Hello! Nice to meet you. Thank you for seeing me.",ok:1,w:"Cumprimento educado para começar bem."},
+  {t:"Cash or card?",w:"Isso é frase de pagamento."},
+  {t:"Take a seat, please.",w:"Quem convida para sentar é o gerente."}]},
+ {sit:'Ele começa pedindo que você se apresente.',c:"Can you tell me about yourself?",cp:"Pode falar um pouco sobre você?",o:[
+  {t:"I'm from Brazil, but I live in Ireland now. I like cutting hair.",ok:1,w:"Duas frases simples dizem quem você é."},
+  {t:"I'm hungry. I need to eat.",w:"Não responde à pergunta."},
+  {t:"Do you want a wash?",w:"Essa pergunta é para clientes."}]},
+ {sit:'Ele quer saber o que você sabe fazer.',c:"What can you do?",cp:"O que você sabe fazer?",o:[
+  {t:"I can do fades and beard trims.",ok:1,w:"Resposta direta com serviços que você faz."},
+  {t:"It's good for thick hair.",w:"Essa frase é sobre produto."},
+  {t:"Who is next?",w:"Essa pergunta é para chamar clientes."}]},
+ {sit:'Ele pergunta sobre a sua disponibilidade.',c:"Are you comfortable working weekends?",cp:"Você topa trabalhar aos fins de semana?",o:[
+  {t:"Yes, I can work weekends.",ok:1,w:"Resposta clara e positiva."},
+  {t:"I'm sorry I'm late.",w:"Essa frase é para quando você chega atrasado."},
+  {t:"Have a good weekend!",w:"Essa frase é de despedida."}]},
+ {sit:'Ele quer saber a data de início.',c:"When can you start?",cp:"Quando você pode começar?",o:[
+  {t:"I can start next week.",ok:1,w:"Responde exatamente o que ele perguntou."},
+  {t:"It's fifteen euro.",w:"Ele não perguntou preço."},
+  {t:"See you tomorrow!",w:"Ele quer saber quando você pode começar, ainda não é despedida."}]},
+ {sit:'A entrevista está acabando.',c:"Do you have any questions?",cp:"Você tem alguma pergunta?",o:[
+  {t:"Yes. How many hours per week is the job?",ok:1,w:"Perguntar mostra interesse pela vaga."},
+  {t:"Take a seat, please.",w:"Você é o candidato, não o contrário."},
+  {t:"Have a good weekend!",w:"Ainda não terminou. Use a chance de perguntar."}]}
+]},
+{id:'job2',group:'trabalho',title:'Primeiro dia de trabalho',blurb:'Chegar, pedir ajuda, limpar o posto e se despedir.',steps:[
+ {sit:'O gerente recebe você no primeiro dia.',c:"Welcome! Today is your first day.",cp:"Bem-vindo! Hoje é seu primeiro dia.",o:[
+  {t:"Thank you! It's nice to be here.",ok:1,w:"Agradece e mostra simpatia."},
+  {t:"That's twenty euro, please.",w:"Você não está cobrando ninguém agora."},
+  {t:"Who is next?",w:"Ainda não há clientes."}]},
+ {sit:'Você precisa de um lugar para deixar seu casaco e sua mochila.',c:"Do you have any questions?",cp:"Alguma dúvida?",o:[
+  {t:"Yes. Where can I put my things?",ok:1,w:"Pergunta simples e prática."},
+  {t:"Cash or card?",w:"Isso é frase de pagamento."},
+  {t:"Thank you very much! See you next time.",w:"Você acabou de chegar."}]},
+ {sit:'O gerente pede uma tarefa antes do primeiro cliente.',c:"Can you clean your station before the first customer?",cp:"Pode limpar o seu posto antes do primeiro cliente?",o:[
+  {t:"Of course! I'll clean the station.",ok:1,w:"Aceita e diz que vai fazer."},
+  {t:"Not too short, please.",w:"Essa frase é do cliente, sobre o corte."},
+  {t:"Would you like to try it?",w:"Essa pergunta é para vender produto."}]},
+ {sit:'Você não sabe usar a máquina de cartão.',c:"Is everything OK?",cp:"Está tudo bem?",o:[
+  {t:"Can you show me how to do this?",ok:1,w:"Pedir ajuda cedo evita erro."},
+  {t:"I use it myself.",w:"Essa frase é sobre produto."},
+  {t:"Have a good weekend!",w:"Essa frase é de despedida."}]},
+ {sit:'O dia terminou.',c:"Good job today! See you tomorrow.",cp:"Bom trabalho hoje! Até amanhã.",o:[
+  {t:"Thanks for your help! See you tomorrow!",ok:1,w:"Agradece e se despede."},
+  {t:"Who is next?",w:"O dia acabou. Não há mais clientes."},
+  {t:"Take a seat, please.",w:"Essa frase é para clientes."}]}
+]},
+{id:'bus',group:'vida',title:'No ônibus e na rua',blurb:'Pedir o ponto, comprar a passagem e avisar onde descer.',steps:[
+ {sit:'Você está na rua e precisa achar o ponto de ônibus.',c:"Hi! Can I help you?",cp:"Oi! Posso ajudar?",o:[
+  {t:"Excuse me, where is the bus stop?",ok:1,w:"Começa com \"Excuse me\", que é educado e natural."},
+  {t:"Cash or card?",w:"Essa pergunta é de quem cobra."},
+  {t:"I'm from Brazil.",w:"É verdade, mas não responde à oferta de ajuda."}]},
+ {sit:'Ele explica o caminho.',c:"It's on your left, about five minutes on foot.",cp:"Fica à sua esquerda, a uns cinco minutos a pé.",o:[
+  {t:"Thank you very much!",ok:1,w:"Quem ajudou merece um agradecimento."},
+  {t:"Tell me if it hurts.",w:"Essa frase é do atendimento de barba."},
+  {t:"Number two on the sides.",w:"Essa frase é de corte de cabelo."}]},
+ {sit:'Você entra no ônibus e fala com o motorista.',c:"Hello. Where to?",cp:"Olá. Para onde?",o:[
+  {t:"One ticket to the city centre, please.",ok:1,w:"Pede a passagem e o destino numa frase só."},
+  {t:"I'm just looking, thanks.",w:"Essa frase é para loja."},
+  {t:"Do you want a wash?",w:"Essa pergunta é do corte."}]},
+ {sit:'Ele quer saber como você vai pagar.',c:"Do you have a Leap card?",cp:"Você tem um cartão Leap?",o:[
+  {t:"Yes, I have a Leap card.",ok:1,w:"Resposta direta."},
+  {t:"Enter your PIN, please.",w:"Quem pede a senha é quem cobra."},
+  {t:"Who is next?",w:"Essa pergunta é para chamar clientes."}]},
+ {sit:'Você não sabe onde descer.',c:"Where are you going?",cp:"Para onde você vai?",o:[
+  {t:"To the station. Can you tell me when to get off?",ok:1,w:"Diz o destino e pede ajuda para descer."},
+  {t:"I'm hungry. I need to eat.",w:"Não responde à pergunta."},
+  {t:"Wait a few minutes, please.",w:"Essa frase é para clientes."}]}
+]},
+{id:'flat',group:'vida',title:'Visita a um quarto para alugar',blurb:'Perguntar aluguel, contas, depósito e quem mora na casa.',steps:[
+ {sit:'Você chega para ver um quarto.',c:"Hi! Come in. You're here for the room, right?",cp:"Oi! Entre. Você veio ver o quarto, né?",o:[
+  {t:"Yes, thank you. Can I see the room?",ok:1,w:"Confirma e pede para ver o quarto."},
+  {t:"Take a seat, please.",w:"Quem convida para sentar é o anfitrião."},
+  {t:"Who is next?",w:"Essa pergunta é para chamar clientes."}]},
+ {sit:'Ele mostra o quarto. Pergunte o preço.',c:"Sure. This is the room.",cp:"Claro. Este é o quarto.",o:[
+  {t:"How much is the rent?",ok:1,w:"A pergunta mais importante sobre moradia."},
+  {t:"Do you want a receipt?",w:"Essa pergunta é do pagamento."},
+  {t:"How would you like your hair cut?",w:"Essa pergunta é da barbearia."}]},
+ {sit:'Ele diz o valor do aluguel.',c:"It's five hundred euro a month.",cp:"São quinhentos euros por mês.",o:[
+  {t:"Are the bills included?",ok:1,w:"Pergunta sobre luz, água e internet."},
+  {t:"It's fifteen euro.",w:"Isso é frase de preço de produto."},
+  {t:"Cash or card?",w:"Ainda não é hora de pagar."}]},
+ {sit:'As contas não estão incluídas. Pergunte o depósito.',c:"No, bills are separate.",cp:"Não, as contas são separadas.",o:[
+  {t:"I see. How much is the deposit?",ok:1,w:"\"I see\" mostra que você entendeu, depois pergunta o depósito."},
+  {t:"Me too.",w:"Não faz sentido nessa conversa."},
+  {t:"Have a great day!",w:"Ainda não terminou."}]},
+ {sit:'Ele responde o valor do depósito. Pergunte sobre os moradores.',c:"One month's rent.",cp:"Um mês de aluguel.",o:[
+  {t:"Who else lives here?",ok:1,w:"Saber com quem você vai morar é importante."},
+  {t:"Which number for the clippers?",w:"Essa pergunta é da barbearia."},
+  {t:"Let me show you the back.",w:"Essa frase é do corte de cabelo."}]},
+ {sit:'Você gostou e quer fechar.',c:"Two other people. They're very friendly.",cp:"Duas outras pessoas. São bem simpáticas.",o:[
+  {t:"That sounds good. I'd like to take the room.",ok:1,w:"Reage bem e diz que quer o quarto."},
+  {t:"Nice to meet you.",w:"Ele disse algo sobre os moradores. Responda isso."},
+  {t:"Sorry, I don't understand.",w:"A frase era simples. Você entendeu."}]}
+]},
+{id:'cafe1',group:'vida',title:'Pedindo no café',blurb:'Pedir um café, escolher comer aqui ou levar e pagar.',steps:[
+ {sit:'Você chega ao balcão.',c:"Hi! What can I get you?",cp:"Oi! O que posso servir?",o:[
+  {t:"Can I have a coffee, please?",ok:1,w:"Pedido educado e simples."},
+  {t:"Take a seat, please.",w:"Quem convida para sentar é o atendente."},
+  {t:"That's twenty euro, please.",w:"Quem cobra é o atendente."}]},
+ {sit:'Ele quer saber se você vai ficar ou levar.',c:"Eat in or take away?",cp:"Comer aqui ou levar?",o:[
+  {t:"Take away, please.",ok:1,w:"\"Take away\" significa levar embora."},
+  {t:"Number two on the sides.",w:"Essa frase é de corte de cabelo."},
+  {t:"Sorry, I don't understand.",w:"Dá para entender: \"eat in\" é comer aqui, \"take away\" é levar."}]},
+ {sit:'Ele pergunta se você quer mais algo.',c:"Anything else?",cp:"Mais alguma coisa?",o:[
+  {t:"No, that's all, thanks.",ok:1,w:"Resposta curta e educada."},
+  {t:"I'm lost.",w:"Não tem relação com o pedido."},
+  {t:"Thank you! See you next time.",w:"Ainda falta pagar."}]},
+ {sit:'Ele diz o valor.',c:"That's four euro, please.",cp:"São quatro euros, por favor.",o:[
+  {t:"Can I pay by card?",ok:1,w:"Pergunta como pagar."},
+  {t:"Do you want a receipt?",w:"Essa pergunta é de quem cobra."},
+  {t:"Here is your change.",w:"Quem dá o troco é o atendente."}]},
+ {sit:'Ele entrega o café.',c:"Here you go. Have a nice day!",cp:"Aqui está. Tenha um bom dia!",o:[
+  {t:"Thank you! You too.",ok:1,w:"Agradece e devolve o desejo."},
+  {t:"Who is next?",w:"Você é o cliente."},
+  {t:"I'd like the chicken, please.",w:"Você já pediu e pagou."}]}
+]},
+{id:'pharm',group:'vida',title:'Na farmácia',blurb:'Dizer o que sente, perguntar como usar e pagar.',steps:[
+ {sit:'Você entra na farmácia com dor de garganta.',c:"Hello. How can I help you?",cp:"Olá. Como posso ajudar?",o:[
+  {t:"I have a sore throat. Do you have something for it?",ok:1,w:"Diz o sintoma e pede uma solução."},
+  {t:"Cash or card?",w:"Ainda não é hora de pagar."},
+  {t:"Take a seat, please.",w:"Quem convida para sentar é o atendente."}]},
+ {sit:'Ele mostra um produto.',c:"This one is good for a sore throat.",cp:"Este é bom para dor de garganta.",o:[
+  {t:"How often can I take this?",ok:1,w:"Pergunta como usar. Quem decide a dose é o farmacêutico."},
+  {t:"Where is the bus stop?",w:"Essa pergunta é de transporte."},
+  {t:"Take a seat, please.",w:"Quem convida para sentar é o atendente."}]},
+ {sit:'Você toma outro remédio.',c:"Follow the instructions on the box.",cp:"Siga as instruções da caixa.",o:[
+  {t:"Is it safe with other medicine?",ok:1,w:"Sempre confirme isso com o farmacêutico."},
+  {t:"Wait a few minutes, please.",w:"Essa frase é para clientes na barbearia."},
+  {t:"Nice to meet you.",w:"Não combina com a resposta dele."}]},
+ {sit:'O farmacêutico confirma.',c:"Yes, it's safe. Anything else?",cp:"Sim, é seguro. Mais alguma coisa?",o:[
+  {t:"No, that's all. How much is it?",ok:1,w:"Fecha o pedido e pergunta o preço."},
+  {t:"I'm hungry. I need to eat.",w:"Não responde à pergunta."},
+  {t:"Let me show you the back.",w:"Essa frase é do corte de cabelo."}]},
+ {sit:'Ele diz o valor.',c:"That's eight euro.",cp:"São oito euros.",o:[
+  {t:"Can I pay by card?",ok:1,w:"Pergunta como pagar."},
+  {t:"Please call an ambulance.",w:"Essa frase é só para emergência."},
+  {t:"It's raining again.",w:"Não tem relação com o pagamento."}]}
+]}
+];
+
+/* ---------- Preparação dos dados ---------- */
+var MOD={};
+MODULES.forEach(function(m){
+  m.cards=m.cards.map(function(a){
+    return {id:m.id+':'+a[0].toLowerCase().replace(/[^a-z0-9]+/g,'-'),en:a[0],pt:a[1],say:a[2],mod:m.id,kind:m.kind||'phrase'};
+  });
+  MOD[m.id]=m;
+});
+function allCards(){var r=[];MODULES.forEach(function(m){r=r.concat(m.cards);});return r;}
+
+/* ---------- Progresso salvo no navegador ---------- */
+var KEY='barber-english-v1';
+function loadP(){
+  var base={known:{},days:[],scenes:{},slow:false};
+  try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);if(o&&typeof o==='object'){return Object.assign(base,o);}}}catch(e){}
+  return base;
+}
+var P=loadP();
+function saveP(){try{localStorage.setItem(KEY,JSON.stringify(P));}catch(e){}}
+function ds(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function markDay(){
+  var t=ds(new Date());
+  if(P.days.indexOf(t)<0){P.days.push(t);if(P.days.length>400){P.days=P.days.slice(-400);}}
+  saveP();
+}
+function streak(){
+  var set={};P.days.forEach(function(d){set[d]=1;});
+  var d=new Date();if(!set[ds(d)]){d.setDate(d.getDate()-1);}
+  var s=0;while(set[ds(d)]){s++;d.setDate(d.getDate()-1);}
+  return s;
+}
+function setKnown(id,v){if(v){P.known[id]=1;}else{delete P.known[id];}markDay();}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+/* ---------- Áudio ---------- */
+var TTS=('speechSynthesis' in window)&&(typeof SpeechSynthesisUtterance!=='undefined');
+var voice=null;
+function loadVoice(){
+  if(!TTS){return;}
+  try{
+    var vs=speechSynthesis.getVoices()||[];
+    function L(v){return String(v.lang||'').replace('_','-');}
+    voice=vs.filter(function(v){return L(v)==='en-IE';})[0]||vs.filter(function(v){return L(v)==='en-GB';})[0]||vs.filter(function(v){return /^en/i.test(L(v));})[0]||null;
+  }catch(e){voice=null;}
+}
+if(TTS){loadVoice();try{speechSynthesis.addEventListener('voiceschanged',loadVoice);}catch(e){}}
+function speak(t){
+  if(!TTS){return;}
+  try{
+    speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(t);
+    u.lang=voice?String(voice.lang).replace('_','-'):'en-GB';
+    if(voice){u.voice=voice;}
+    u.rate=P.slow?0.6:0.92;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* ---------- Ajudantes de interface ---------- */
+function el(tag,props){
+  var n=document.createElement(tag);
+  if(props){for(var k in props){
+    var v=props[k];
+    if(v===null||v===undefined||v===false){continue;}
+    if(k==='class'){n.className=v;}
+    else if(k.slice(0,2)==='on'){n.addEventListener(k.slice(2),v);}
+    else{n.setAttribute(k,v===true?'':v);}
+  }}
+  for(var i=2;i<arguments.length;i++){add(n,arguments[i]);}
+  return n;
+}
+function add(n,c){
+  if(c===null||c===undefined||c===false){return;}
+  if(Array.isArray(c)){c.forEach(function(x){add(n,x);});return;}
+  n.appendChild(typeof c==='object'?c:document.createTextNode(String(c)));
+}
+function icon(path,size){
+  var s=el('span',{'aria-hidden':'true',class:'icw'});
+  s.innerHTML='<svg viewBox="0 0 24 24" width="'+(size||20)+'" height="'+(size||20)+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+path+'</svg>';
+  return s;
+}
+var I={
+  spk:'<path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/>',
+  chev:'<path d="M9 6l6 6-6 6"/>',
+  back:'<path d="M15 6l-6 6 6 6"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  cross:'<path d="M6 6l12 12M18 6L6 18"/>',
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>'
+};
+function bar(pct){var i=el('i');i.style.width=Math.max(0,Math.min(100,pct))+'%';return el('span',{class:'bar'},i);}
+function btn(label,cls,fn,extra){return el('button',Object.assign({class:'btn '+(cls||''),type:'button',onclick:fn},extra||{}),label);}
+function seg(items){
+  return el('div',{class:'seg',role:'group'},items.map(function(it){
+    return el('button',{type:'button','aria-pressed':it.on?'true':'false',onclick:it.fn},it.label);
+  }));
+}
+function audioRow(text){
+  if(!TTS){return el('p',{class:'tip'},'Este navegador não tem áudio. Leia em voz alta.');}
+  return el('div',{class:'audio'},
+    el('button',{class:'btn audio-btn',type:'button',onclick:function(){speak(text);}},icon(I.spk),'Ouvir'),
+    el('button',{class:'chip',type:'button','aria-pressed':P.slow?'true':'false',onclick:function(){P.slow=!P.slow;saveP();render();speak(text);}},'Devagar')
+  );
+}
+function topbar(title,sub,onBack,backLabel){
+  return el('div',{class:'topbar'},
+    el('button',{class:'back',type:'button',onclick:onBack},icon(I.back),backLabel||'Início'),
+    el('h2',null,title),
+    sub?el('p',{class:'sub'},sub):null
+  );
+}
+
+/* ---------- Estado e navegação ---------- */
+var state={view:'home',mod:null,tab:'cards',filter:'all',idx:0,rev:false,quiz:null,scene:null};
+var root=document.getElementById('app');
+function render(){
+  var v;
+  if(state.view==='module'){v=viewModule();}
+  else if(state.view==='daily'){v=viewDaily();}
+  else if(state.view==='scene'){v=viewScene();}
+  else if(state.view==='track'){v=viewTrack();}
+  else{v=viewHome();}
+  root.replaceChildren(v);
+}
+function go(view,extra){
+  if(TTS){try{speechSynthesis.cancel();}catch(e){}}
+  Object.assign(state,extra||{});
+  state.view=view;
+  render();
+  try{window.scrollTo(0,0);}catch(e){}
+}
+
+/* ---------- Início ---------- */
+function trackOf(x){return x.group||'barbearia';}
+function trackTitle(id){return TRACKS.filter(function(t){return t.id===id;})[0].title;}
+function trackRows(){
+  return TRACKS.map(function(t){
+    var mods=MODULES.filter(function(m){return trackOf(m)===t.id;});
+    var total=0,k=0;
+    mods.forEach(function(m){total+=m.cards.length;m.cards.forEach(function(c){if(P.known[c.id]){k++;}});});
+    var sc=SCENES.filter(function(x){return trackOf(x)===t.id;}).length;
+    return el('button',{class:'row',type:'button',onclick:function(){go('track',{track:t.id});}},
+      el('span',{class:'row-main'},el('span',{class:'row-title'},t.title),el('span',{class:'row-sub'},t.blurb+' ('+mods.length+(mods.length===1?' módulo':' módulos')+', '+sc+(sc===1?' simulação':' simulações')+')')),
+      el('span',{class:'row-end'},k+'/'+total,icon(I.chev)),
+      bar(total?k/total*100:0)
+    );
+  });
+}
+function viewTrack(){
+  var t=TRACKS.filter(function(x){return x.id===state.track;})[0];
+  var sr=sceneRows(t.id),mr=modRows(t.id);
+  return el('div',{class:'wrap'},
+    topbar(t.title,t.blurb,function(){go('home');}),
+    sr.length?section('Simulações de conversa',sr):null,
+    mr.length?section('Frases e palavras',mr):null
+  );
+}
+function sceneRows(g){
+  return SCENES.filter(function(sc){return (sc.group||'barbearia')===g;}).map(function(sc){
+    var best=P.scenes[sc.id];
+    return el('button',{class:'row',type:'button',onclick:function(){startScene(sc.id);}},
+      el('span',{class:'row-main'},el('span',{class:'row-title'},sc.title),el('span',{class:'row-sub'},sc.blurb)),
+      el('span',{class:'row-end'},best!==undefined?(best+'/'+sc.steps.length):'',icon(I.chev))
+    );
+  });
+}
+function modRows(g){
+  return MODULES.filter(function(m){return (m.group||'barbearia')===g;}).map(function(m){
+    var k=m.cards.filter(function(c){return P.known[c.id];}).length;
+    return el('button',{class:'row',type:'button',onclick:function(){go('module',{mod:m.id,tab:'cards',filter:'all',idx:0,rev:false,quiz:null});}},
+      el('span',{class:'row-main'},el('span',{class:'row-title'},m.title),el('span',{class:'row-sub'},m.en)),
+      el('span',{class:'row-end'},k+'/'+m.cards.length,icon(I.chev)),
+      bar(k/m.cards.length*100)
+    );
+  });
+}
+function section(label,rows){
+  return el('section',{class:'section'},el('p',{class:'label'},label),el('div',{class:'list'},rows));
+}
+function viewHome(){
+  var all=allCards();
+  var known=all.filter(function(c){return P.known[c.id];}).length;
+  var s=streak();
+  return el('div',{class:'wrap'},
+    el('div',{class:'pole','aria-hidden':'true'}),
+    el('header',{class:'hero'},
+      el('p',{class:'label'},'Inglês para a barbearia e para a vida na Irlanda'),
+      el('h1',null,'Barber English'),
+      el('p',{class:'lead'},'Ouça, repita em voz alta e responda. Frases reais de atendimento e de conversa para quem está começando no inglês.')
+    ),
+    el('div',{class:'stats'},
+      el('div',{class:'stat'},el('span',{class:'label'},'Frases aprendidas'),el('strong',null,String(known),el('small',null,' / '+all.length)),bar(known/all.length*100)),
+      el('div',{class:'stat'},el('span',{class:'label'},'Sequência de estudo'),el('strong',null,String(s),el('small',null,s===1?' dia':' dias')),el('span',{class:'tip'},s?'Estude hoje para manter.':'Faça o treino de hoje para começar.'))
+    ),
+    el('button',{class:'daily',type:'button',onclick:startDaily},
+      el('span',{class:'label'},'Treino do dia'),
+      el('strong',null,'10 perguntas misturadas'),
+      el('span',{class:'sub'},'Começa pelo que você ainda não sabe. Leva uns 3 minutos.'),
+      el('span',{class:'ic'},icon(I.arrow,28))
+    ),
+    section('Trilhas de estudo',trackRows()),
+    el('section',{class:'section'},
+      el('p',{class:'label'},'Em breve'),
+      el('div',{class:'soon'},SOON.map(function(t){return el('span',null,t);}))
+    )
+  );
+}
+
+/* ---------- Módulo: cartões e quiz ---------- */
+function viewModule(){
+  var m=MOD[state.mod];
+  return el('div',{class:'wrap'},
+    topbar(m.title,m.blurb,function(){go('track',{track:trackOf(m)});},trackTitle(trackOf(m))),
+    seg([
+      {label:'Cartões',on:state.tab==='cards',fn:function(){state.tab='cards';render();}},
+      {label:'Quiz',on:state.tab==='quiz',fn:function(){
+        state.tab='quiz';
+        if(!state.quiz||state.quiz.scope!==m.id){state.quiz=newQuiz(m.id,m.cards,Math.min(8,m.cards.length),m.cards);}
+        render();speakIfListen();
+      }}
+    ]),
+    state.tab==='cards'?cardsBody(m):quizBody(m.title)
+  );
+}
+function cardsBody(m){
+  var review=m.cards.filter(function(c){return !P.known[c.id];});
+  var deck=state.filter==='review'?review:m.cards;
+  var filter=seg([
+    {label:'Todos ('+m.cards.length+')',on:state.filter==='all',fn:function(){state.filter='all';state.idx=0;state.rev=false;render();}},
+    {label:'Revisar ('+review.length+')',on:state.filter==='review',fn:function(){state.filter='review';state.idx=0;state.rev=false;render();}}
+  ]);
+  if(!deck.length){
+    return el('div',{class:'wrap flush'},filter,
+      el('div',{class:'panel empty'},
+        el('h3',null,'Tudo aprendido aqui'),
+        el('p',null,'Você marcou todas as frases deste módulo como aprendidas. Faça o quiz para confirmar.'),
+        btn('Fazer o quiz','primary',function(){
+          state.tab='quiz';state.quiz=newQuiz(m.id,m.cards,Math.min(8,m.cards.length),m.cards);render();speakIfListen();
+        })
+      ));
+  }
+  if(state.idx>=deck.length){state.idx=deck.length-1;}
+  if(state.idx<0){state.idx=0;}
+  var c=deck[state.idx];
+  function advance(){state.rev=false;if(state.idx<deck.length-1){state.idx++;}else{state.idx=0;}}
+  var done=!!P.known[c.id];
+  return el('div',{class:'wrap flush'},
+    filter,
+    el('article',{class:'panel'},
+      el('div',{class:'flash-top'},
+        el('span',{class:'label'},(state.idx+1)+' de '+deck.length),
+        done?el('span',{class:'tag good'},icon(I.check,14),'Aprendida'):null
+      ),
+      el('p',{class:'en',lang:'en'},c.en),
+      audioRow(c.en),
+      state.rev
+        ?el('div',{class:'reveal'},
+            el('p',{class:'pt'},c.pt),
+            el('p',{class:'label'},'Como falar (aproximado)'),
+            el('p',{class:'say'},c.say),
+            el('p',{class:'tip'},'Repita em voz alta três vezes.'))
+        :btn('Mostrar tradução','ghost wide',function(){state.rev=true;render();}),
+      state.rev?el('div',{class:'actions'},
+        btn('Revisar depois','',function(){setKnown(c.id,false);advance();render();}),
+        btn('Já sei','primary',function(){setKnown(c.id,true);advance();render();})
+      ):null
+    ),
+    el('div',{class:'nav'},
+      btn('Anterior','',function(){state.rev=false;state.idx=state.idx>0?state.idx-1:deck.length-1;render();}),
+      btn('Próxima','',function(){advance();render();})
+    )
+  );
+}
+
+/* ---------- Quiz (usado no módulo e no treino do dia) ---------- */
+function newQuiz(scope,cards,n,pool){
+  var unk=shuffle(cards.filter(function(c){return !P.known[c.id];}));
+  var kn=shuffle(cards.filter(function(c){return P.known[c.id];}));
+  var chosen=shuffle(unk.concat(kn).slice(0,n));
+  var types=TTS?['en2pt','pt2en','listen']:['en2pt','pt2en'];
+  var qs=chosen.map(function(c){
+    var type=types[Math.floor(Math.random()*types.length)];
+    var key=type==='pt2en'?'en':'pt';
+    var ans=c[key];
+    var opts=[ans],seen={};seen[ans]=1;
+    shuffle(pool.filter(function(x){return x.id!==c.id&&x.kind===c.kind;})).forEach(function(x){
+      if(opts.length<4&&!seen[x[key]]){seen[x[key]]=1;opts.push(x[key]);}
+    });
+    return {c:c,type:type,ans:ans,opts:shuffle(opts),picked:null};
+  });
+  return {scope:scope,qs:qs,i:0,score:0};
+}
+function speakIfListen(){
+  var Q=state.quiz;
+  if(!Q||Q.i>=Q.qs.length){return;}
+  var q=Q.qs[Q.i];
+  if(q.type==='listen'&&q.picked===null){speak(q.c.en);}
+}
+function answerQ(o){
+  var Q=state.quiz,q=Q.qs[Q.i];
+  if(q.picked!==null){return;}
+  q.picked=o;
+  if(o===q.ans){Q.score++;setKnown(q.c.id,true);}else{setKnown(q.c.id,false);}
+  render();
+}
+function quizBody(title){
+  var Q=state.quiz;
+  if(!Q.qs.length){return el('div',{class:'panel'},el('p',null,'Não há perguntas aqui ainda.'));}
+  if(Q.i>=Q.qs.length){return quizResult(Q);}
+  var q=Q.qs[Q.i];
+  var answered=q.picked!==null;
+  var right=q.picked===q.ans;
+  var head=q.type==='en2pt'?'Qual é o significado?':q.type==='pt2en'?'Como se diz em inglês?':'Ouça e escolha o significado';
+  return el('div',{class:'wrap flush'},
+    el('div',{class:'progress-line'},el('span',{class:'label'},'Pergunta '+(Q.i+1)+' de '+Q.qs.length),bar(Q.i/Q.qs.length*100)),
+    el('article',{class:'panel'},
+      el('p',{class:'label'},head),
+      q.type==='en2pt'?el('p',{class:'en',lang:'en'},q.c.en):null,
+      q.type==='pt2en'?el('p',{class:'en'},q.c.pt):null,
+      q.type!=='pt2en'?audioRow(q.c.en):null,
+      el('div',{class:'opts'},q.opts.map(function(o){
+        var cls='opt',ic=null;
+        if(answered){
+          if(o===q.ans){cls+=' right';ic=icon(I.check);}
+          else if(o===q.picked){cls+=' wrong';ic=icon(I.cross);}
+          else{cls+=' dim';}
+        }
+        var attrs={class:cls,type:'button',onclick:function(){answerQ(o);}};
+        if(answered){attrs.disabled=true;}
+        if(q.type==='pt2en'){attrs.lang='en';}
+        return el('button',attrs,el('span',null,o),ic);
+      })),
+      answered?el('div',{class:'feedback '+(right?'ok':'no')},
+        el('strong',null,right?'Certo!':'Quase. A resposta certa está em verde.'),
+        el('p',{lang:'en'},q.c.en),
+        el('p',null,q.c.pt),
+        el('p',{class:'say'},q.c.say)
+      ):null,
+      answered?btn(Q.i+1>=Q.qs.length?'Ver resultado':'Próxima','primary wide',function(){Q.i++;render();speakIfListen();}):null
+    )
+  );
+}
+function quizResult(Q){
+  var n=Q.qs.length;
+  var missed=Q.qs.filter(function(q){return q.picked!==q.ans;});
+  var msg=Q.score===n?'Perfeito. Tudo certo.':Q.score>=n*0.7?'Muito bom. Revise o que errou abaixo.':'Bom começo. Volte aos cartões e tente de novo.';
+  return el('div',{class:'wrap flush'},
+    el('article',{class:'panel'},
+      el('p',{class:'label'},'Resultado'),
+      el('p',{class:'score'},Q.score+'/'+n),
+      el('p',null,msg),
+      missed.length?el('div',null,
+        el('p',{class:'label'},'Para revisar'),
+        el('ul',{class:'miss'},missed.map(function(q){
+          return el('li',null,el('b',{lang:'en'},q.c.en),el('p',null,q.c.pt));
+        }))
+      ):null,
+      el('div',{class:'actions'},
+        btn('Início','',function(){go('home');}),
+        btn('Refazer','primary',function(){
+          var pool=Q.scope==='daily'?allCards():MOD[Q.scope].cards;
+          state.quiz=newQuiz(Q.scope,pool,Q.scope==='daily'?10:Math.min(8,pool.length),pool);
+          render();speakIfListen();
+        })
+      )
+    )
+  );
+}
+function startDaily(){
+  var pool=allCards();
+  state.quiz=newQuiz('daily',pool,10,pool);
+  go('daily');
+  speakIfListen();
+}
+function viewDaily(){
+  return el('div',{class:'wrap'},
+    topbar('Treino do dia','Perguntas misturadas de todos os módulos.',function(){go('home');}),
+    quizBody('Treino do dia')
+  );
+}
+
+/* ---------- Simulações ---------- */
+function beginStep(S){
+  var sc=SCENES.filter(function(x){return x.id===S.id;})[0];
+  S.order=shuffle(sc.steps[S.i].o.map(function(_,k){return k;}));
+  S.tries=0;S.wrong=[];S.ok=false;S.msg=null;S.pt=false;S.picked=-1;
+}
+function startScene(id){
+  var S={id:id,i:0,first:0,done:false,log:[]};
+  beginStep(S);
+  state.scene=S;
+  go('scene');
+}
+function pickOpt(k){
+  var S=state.scene;
+  var sc=SCENES.filter(function(x){return x.id===S.id;})[0];
+  var o=sc.steps[S.i].o[k];
+  if(S.ok){return;}
+  markDay();
+  if(o.ok){S.ok=true;S.picked=k;S.msg=o.w;if(S.tries===0){S.first++;}}
+  else{if(S.wrong.indexOf(k)<0){S.wrong.push(k);}S.tries++;S.msg=o.w;}
+  render();
+}
+function nextStep(){
+  var S=state.scene;
+  var sc=SCENES.filter(function(x){return x.id===S.id;})[0];
+  var st=sc.steps[S.i];
+  S.log.push({c:st.c,cp:st.cp,r:st.o[S.picked].t});
+  S.i++;
+  if(S.i>=sc.steps.length){
+    S.done=true;
+    P.scenes[S.id]=Math.max(P.scenes[S.id]||0,S.first);
+    saveP();
+  }else{beginStep(S);}
+  render();
+}
+function viewScene(){
+  var S=state.scene;
+  var sc=SCENES.filter(function(x){return x.id===S.id;})[0];
+  var total=sc.steps.length;
+  var chat=el('div',{class:'chat'});
+  S.log.forEach(function(l){
+    chat.appendChild(el('div',{class:'bubble'},el('span',{class:'who'},'Cliente'),el('p',{class:'line',lang:'en'},l.c)));
+    chat.appendChild(el('div',{class:'bubble me'},el('span',{class:'who'},'Você'),el('p',{class:'line',lang:'en'},l.r)));
+  });
+  if(S.done){
+    var msg=S.first===total?'Perfeito. Todas de primeira.':S.first>=total-1?'Muito bom. Quase tudo de primeira.':'Boa. Repita a simulação para acertar de primeira.';
+    return el('div',{class:'wrap'},
+      topbar(sc.title,null,function(){go('track',{track:trackOf(sc)});},trackTitle(trackOf(sc))),
+      chat,
+      el('article',{class:'panel'},
+        el('p',{class:'label'},'Simulação completa'),
+        el('p',{class:'score'},S.first+'/'+total),
+        el('p',null,msg+' O número mostra as respostas certas na primeira tentativa.'),
+        el('div',{class:'actions'},
+          btn('Voltar à trilha','',function(){go('track',{track:trackOf(sc)});}),
+          btn('Repetir','primary',function(){startScene(S.id);})
+        )
+      )
+    );
+  }
+  var st=sc.steps[S.i];
+  var cust=el('div',{class:'bubble'},
+    el('span',{class:'who'},'Cliente'),
+    el('p',{class:'line',lang:'en'},st.c),
+    S.pt?el('p',{class:'tr'},st.cp):null,
+    el('div',{class:'audio'},
+      TTS?el('button',{class:'btn audio-btn',type:'button',onclick:function(){speak(st.c);}},icon(I.spk),'Ouvir'):null,
+      el('button',{class:'chip',type:'button','aria-pressed':S.pt?'true':'false',onclick:function(){S.pt=!S.pt;render();}},'Ver tradução')
+    )
+  );
+  var opts=el('div',{class:'opts'},S.order.map(function(k){
+    var o=st.o[k];
+    var cls='opt',ic=null,attrs={type:'button',lang:'en'};
+    if(S.ok){
+      if(k===S.picked){cls+=' right';ic=icon(I.check);}else{cls+=' dim';}
+      attrs.disabled=true;
+    }else if(S.wrong.indexOf(k)>=0){cls+=' wrong';ic=icon(I.cross);attrs.disabled=true;}
+    attrs.class=cls;
+    attrs.onclick=function(){pickOpt(k);};
+    var main=el('button',attrs,el('span',null,o.t),ic);
+    if(!TTS){return main;}
+    return el('div',{class:'optrow'},main,el('button',{class:'sq',type:'button','aria-label':'Ouvir esta resposta',onclick:function(){speak(o.t);}},icon(I.spk)));
+  }));
+  var fb=null;
+  if(S.msg){
+    fb=el('div',{class:'feedback '+(S.ok?'ok':'no')},
+      el('strong',null,S.ok?'Boa resposta':'Tente outra'),
+      el('p',null,S.msg));
+  }
+  return el('div',{class:'wrap'},
+    topbar(sc.title,null,function(){go('track',{track:trackOf(sc)});},trackTitle(trackOf(sc))),
+    el('div',{class:'progress-line'},el('span',{class:'label'},'Fala '+(S.i+1)+' de '+total),bar(S.i/total*100)),
+    chat,
+    el('p',{class:'situation'},st.sit),
+    cust,
+    el('p',{class:'label'},'Sua resposta'),
+    opts,
+    fb,
+    S.ok?btn(S.i+1>=total?'Ver resultado':'Próxima fala','primary wide',nextStep):null
+  );
+}
+
+render();
+})();
+</script>
+</body>
+</html>
